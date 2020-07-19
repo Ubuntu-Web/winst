@@ -1,0 +1,37 @@
+#!/bin/bash
+
+set -e
+
+if [ $# != 1 ]
+  then echo "Requires 1 argument: <PATH_TO_APP>" && exit 1
+fi
+
+if [ "$EUID" != 0 ]
+  then echo "Requires root (hint: use sudo)" && exit 1
+fi
+
+# Extract to temporary directory
+TEMP_DIR="/tmp/$RANDOM"
+rm -rf "$TEMP_DIR" && mkdir "$TEMP_DIR"
+tar xf "$1" -C "$TEMP_DIR" --strip-components 1
+
+# App information
+NAME=$(cat "$TEMP_DIR/appinfo" | grep 'Name:' | cut -d ' ' -f 2)
+
+# Create app folder
+mkdir -p "/etc/web-apps" && rm -rf "/etc/web-apps/$NAME/" && mkdir "/etc/web-apps/$NAME/"
+cp -R "$TEMP_DIR/"* "/etc/web-apps/$NAME/"
+cp "/etc/web-apps/$NAME/deskfiles/"* "/usr/share/applications/" && rm -r "/etc/web-apps/$NAME/deskfiles/"
+
+# Make hooks executable
+chmod +x "/etc/web-apps/$NAME/hooks/"*
+
+# Run postinst hook and delete it
+/etc/web-apps/$NAME/hooks/postinst
+rm /etc/web-apps/$NAME/hooks/postinst
+
+# Clean up
+rm -rf "$TEMP_DIR"
+
+echo "$1" > "/etc/web-apps/list"
+echo "Installed $NAME successfully."

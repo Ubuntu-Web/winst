@@ -1,0 +1,17 @@
+#!/bin/bash
+
+if [ $# != 1 ]
+  then echo "Requires 1 argument: <APP_NAME>" && exit 1
+fi
+
+if [ "$EUID" != 0 ]
+  then echo "Requires root (hint: use sudo)" && exit 1
+fi
+
+set -e
+
+if grep -Fxq "$1" "/etc/web-apps/list"; then
+  /etc/web-apps/$1/hooks/uninst
+fi
+
+echo "Uninstalled $1."
