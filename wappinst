@@ -33,5 +33,5 @@ rm /etc/web-apps/$NAME/hooks/postinst
 # Clean up
 rm -rf "$TEMP_DIR"
 
-echo "$1" > "/etc/web-apps/list"
+echo "$NAME" > "/etc/web-apps/list"
 echo "Installed $NAME successfully."
