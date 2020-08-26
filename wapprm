@@ -13,7 +13,7 @@ set -e
 if grep -Fxq "$1" "/etc/web-apps/list"; then
   echo "Triggering uninstall hook for $1"
   /etc/web-apps/$1/hooks/uninst
-  sed -i 's/$1//' /etc/web-apps/list
+  sed -i 's/'"$1"'//' /etc/web-apps/list
 else
   echo "$1 is not installed." && exit 1
 fi
