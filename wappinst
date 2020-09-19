@@ -2,6 +2,8 @@
 
 set -e
 
+# Set up
+mkdir -p "/etc/web-apps/"
 [ ! -f "/etc/web-apps/list" ] && touch "/etc/web-apps/list"
 
 if [ $# != 1 ]
