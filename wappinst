@@ -2,6 +2,8 @@
 
 set -e
 
+[ ! -f "/etc/web-apps/list" ] && touch "/etc/web-apps/list"
+
 if [ $# != 1 ]
   then echo "Requires 1 argument: <PATH_TO_APP>" && exit 1
 fi
